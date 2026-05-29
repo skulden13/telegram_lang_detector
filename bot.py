@@ -2,6 +2,9 @@ import os
 from telegram import Update
 from telegram.ext import Application, MessageHandler, ContextTypes, filters
 from lingua import Language, LanguageDetectorBuilder
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ALLOWED_LANGUAGES = {
     Language.ENGLISH,
@@ -16,7 +19,6 @@ detector = LanguageDetectorBuilder.from_languages(
     Language.TURKISH,
     Language.ARMENIAN,
 ).build()
-
 
 async def check_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
