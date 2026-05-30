@@ -1,0 +1,7 @@
+services:
+  telegram-language-bot:
+    build: .
+    container_name: telegram-language-bot
+    restart: unless-stopped
+    env_file:
+      - .env

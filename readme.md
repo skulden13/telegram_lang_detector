@@ -52,7 +52,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Dev: freeze Dependencies
+### Dev: Freeze Dependencies
 
 ```bash
 pip freeze > requirements.txt
