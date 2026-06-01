@@ -20,6 +20,7 @@ detector = LanguageDetectorBuilder.from_languages(
     Language.ARMENIAN,
 ).build()
 
+REPLY_MESSAGE = 'Please use English or Georgian 🇬🇪. Thank you! 🐱❤️'
 async def check_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
@@ -29,9 +30,7 @@ async def check_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     language = detector.detect_language_of(text)
 
     if language not in ALLOWED_LANGUAGES:
-        await update.message.reply_text(
-            "English please"
-        )
+        await update.message.reply_text(REPLY_MESSAGE)
 
 
 def main():
