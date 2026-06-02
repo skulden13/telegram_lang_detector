@@ -185,7 +185,7 @@ Recommended configuration:
 ### Connect
 
 ```bash
-ssh -i oracle.key ubuntu@SERVER_IP
+ssh -i ~/.ssh/oracle_ssh.key ubuntu@SERVER_IP
 ```
 
 ### Install Docker
@@ -233,7 +233,7 @@ docker compose logs -f
 ### Update Application
 
 ```bash
-git pull
+git pull --rebase
 docker compose up -d --build
 ```
 
