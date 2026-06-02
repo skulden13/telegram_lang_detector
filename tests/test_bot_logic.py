@@ -1,6 +1,6 @@
 import unittest
 
-from bot_logic import contains_letter, should_check_language
+from bot_logic import contains_letter, contains_unsupported_letter, is_allowed_letter, should_check_language
 
 
 class ContainsLetterTests(unittest.TestCase):
@@ -10,11 +10,38 @@ class ContainsLetterTests(unittest.TestCase):
     def test_returns_false_for_numbers_and_punctuation(self):
         self.assertFalse(contains_letter("123!!!"))
 
-    def test_returns_true_for_english_text_with_emoji(self):
+    def test_returns_true_for_latin_text_with_emoji(self):
         self.assertTrue(contains_letter("hello 😬"))
 
     def test_returns_true_for_georgian_text_with_flag(self):
         self.assertTrue(contains_letter("გამარჯობა 🇬🇪"))
+
+
+class AllowedLetterTests(unittest.TestCase):
+    def test_returns_true_for_latin_letters(self):
+        self.assertTrue(is_allowed_letter("a"))
+        self.assertTrue(is_allowed_letter("ñ"))
+
+    def test_returns_true_for_georgian_letters(self):
+        self.assertTrue(is_allowed_letter("ა"))
+
+    def test_returns_false_for_unsupported_letters(self):
+        self.assertFalse(is_allowed_letter("п"))
+        self.assertFalse(is_allowed_letter("ա"))
+
+
+class ContainsUnsupportedLetterTests(unittest.TestCase):
+    def test_returns_false_for_latin_and_georgian_text(self):
+        self.assertFalse(contains_unsupported_letter("Hello!"))
+        self.assertFalse(contains_unsupported_letter("Hola, niños!"))
+        self.assertFalse(contains_unsupported_letter("გამარჯობა"))
+        self.assertFalse(contains_unsupported_letter('💰: 5 lari'))
+        self.assertFalse(contains_unsupported_letter('💰: 5 lari"'))
+
+    def test_returns_true_for_unsupported_letter_scripts(self):
+        self.assertTrue(contains_unsupported_letter("Привет!"))
+        self.assertTrue(contains_unsupported_letter("За 5 лари"))
+        self.assertTrue(contains_unsupported_letter("Price: 5 лари"))
 
 
 class ShouldCheckLanguageTests(unittest.TestCase):
@@ -29,12 +56,17 @@ class ShouldCheckLanguageTests(unittest.TestCase):
         self.assertFalse(should_check_language("123!!!"))
         self.assertFalse(should_check_language("$$$"))
 
-    def test_returns_true_for_supported_length_text_with_letters(self):
-        self.assertTrue(should_check_language("hey"))
-        self.assertTrue(should_check_language("გამარჯობა"))
+    def test_returns_false_for_latin_or_georgian_text(self):
+        self.assertFalse(should_check_language("hey"))
+        self.assertFalse(should_check_language("hello 123"))
+        self.assertFalse(should_check_language("გამარჯობა"))
+        self.assertFalse(should_check_language("💰: 5 lari"))
+        self.assertFalse(should_check_language('💰: 5 lari"'))
 
-    def test_returns_true_for_text_with_letters_and_numbers(self):
-        self.assertTrue(should_check_language("hello 123"))
+    def test_returns_true_for_unsupported_letter_scripts(self):
+        self.assertTrue(should_check_language("Привет!"))
+        self.assertTrue(contains_unsupported_letter("За 5 лари"))
+        self.assertTrue(should_check_language("Price: 5 лари"))
 
 
 if __name__ == "__main__":

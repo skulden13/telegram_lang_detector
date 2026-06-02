@@ -43,6 +43,7 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
         await self.assert_does_not_reply("Hello!", "ENGLISH")
         await self.assert_does_not_reply("Hola, niños!", "ENGLISH")
         await self.assert_does_not_reply("💰: 5 lari", "ENGLISH")
+        await self.assert_does_not_reply('💰: 5 lari"', "ENGLISH")
         await self.assert_does_not_reply("Price: 5 lari", "ENGLISH")
 
     async def test_notifies_for_unsupported_languages(self):
@@ -51,8 +52,8 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
         await self.assert_replies("💰: 5 лари", "RUSSIAN")
         await self.assert_replies("Price: 5 лари", "RUSSIAN")
 
-    async def test_does_not_detect_language_when_text_has_no_letters(self):
-        message = SimpleNamespace(text="123!!!", reply_text=AsyncMock())
+    async def test_does_not_detect_language_when_text_should_be_ignored(self):
+        message = SimpleNamespace(text='💰: 5 lari"', reply_text=AsyncMock())
         update = SimpleNamespace(message=message)
 
         detector = Mock()
