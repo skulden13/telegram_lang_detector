@@ -1,4 +1,5 @@
 import os
+import unicodedata
 from telegram import Update
 from telegram.ext import Application, MessageHandler, ContextTypes, filters
 from lingua import Language, LanguageDetectorBuilder
@@ -21,10 +22,16 @@ detector = LanguageDetectorBuilder.from_languages(
 ).build()
 
 REPLY_MESSAGE = 'Please use English or Georgian 🇬🇪. Thank you! 🐱❤️'
+
+
+def contains_letter(text: str) -> bool:
+    return any(unicodedata.category(character).startswith("L") for character in text)
+
+
 async def check_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
 
-    if not text or len(text.strip()) < 3:
+    if not text or len(text.strip()) < 3 or not contains_letter(text):
         return
 
     language = detector.detect_language_of(text)
