@@ -1,42 +1,55 @@
 import os
-from telegram import Update
-from telegram.ext import Application, MessageHandler, ContextTypes, filters
-from lingua import Language, LanguageDetectorBuilder
 from dotenv import load_dotenv
 from bot_logic import should_check_language
 
 load_dotenv()
 
-ALLOWED_LANGUAGES = {
-    Language.ENGLISH,
-    Language.GEORGIAN,
-}
-
-detector = LanguageDetectorBuilder.from_languages(
-    Language.ENGLISH,
-    Language.GEORGIAN,
-    Language.RUSSIAN,
-    Language.UKRAINIAN,
-    Language.TURKISH,
-    Language.ARMENIAN,
-).build()
-
 REPLY_MESSAGE = 'Please use English or Georgian 🇬🇪. Thank you! 🐱❤️'
 
+ALLOWED_LANGUAGE_NAMES = {
+    "ENGLISH",
+    "GEORGIAN",
+}
+_detector = None
 
-async def check_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+def check_language(text: str | None) -> bool:
+    return should_check_language(text)
+
+
+def get_detector():
+    global _detector
+
+    if _detector is None:
+        from lingua import Language, LanguageDetectorBuilder
+
+        _detector = LanguageDetectorBuilder.from_languages(
+            Language.ENGLISH,
+            Language.GEORGIAN,
+            Language.RUSSIAN,
+            Language.UKRAINIAN,
+            Language.TURKISH,
+            Language.ARMENIAN,
+        ).build()
+
+    return _detector
+
+
+async def handle_message(update, context):
     text = update.message.text
 
-    if not should_check_language(text):
+    if not check_language(text):
         return
 
-    language = detector.detect_language_of(text)
+    language = get_detector().detect_language_of(text)
 
-    if language not in ALLOWED_LANGUAGES:
+    if language.name not in ALLOWED_LANGUAGE_NAMES:
         await update.message.reply_text(REPLY_MESSAGE)
 
 
 def main():
+    from telegram.ext import Application, MessageHandler, filters
+
     token = os.getenv("BOT_TOKEN")
 
     if not token:
@@ -44,7 +57,7 @@ def main():
 
     app = Application.builder().token(token).build()
 
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, check_language))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     app.run_polling()
 
