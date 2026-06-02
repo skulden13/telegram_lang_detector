@@ -67,6 +67,7 @@ class ShouldCheckLanguageTests(unittest.TestCase):
         self.assertTrue(should_check_language("Привет!"))
         self.assertTrue(contains_unsupported_letter("За 5 лари"))
         self.assertTrue(should_check_language("Price: 5 лари"))
+        self.assertTrue(should_check_language("Price: 10 лари"))
 
 
 if __name__ == "__main__":

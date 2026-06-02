@@ -6,33 +6,9 @@ load_dotenv()
 
 REPLY_MESSAGE = 'Please use English or Georgian 🇬🇪. Thank you! 🐱❤️'
 
-ALLOWED_LANGUAGE_NAMES = {
-    "ENGLISH",
-    "GEORGIAN",
-}
-_detector = None
-
 
 def check_language(text: str | None) -> bool:
     return should_check_language(text)
-
-
-def get_detector():
-    global _detector
-
-    if _detector is None:
-        from lingua import Language, LanguageDetectorBuilder
-
-        _detector = LanguageDetectorBuilder.from_languages(
-            Language.ENGLISH,
-            Language.GEORGIAN,
-            Language.RUSSIAN,
-            Language.UKRAINIAN,
-            Language.TURKISH,
-            Language.ARMENIAN,
-        ).build()
-
-    return _detector
 
 
 async def handle_message(update, context):
@@ -41,10 +17,7 @@ async def handle_message(update, context):
     if not check_language(text):
         return
 
-    language = get_detector().detect_language_of(text)
-
-    if language.name not in ALLOWED_LANGUAGE_NAMES:
-        await update.message.reply_text(REPLY_MESSAGE)
+    await update.message.reply_text(REPLY_MESSAGE)
 
 
 def main():

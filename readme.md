@@ -4,7 +4,7 @@
   <img src="./cat_avatar.jpg" alt="Bot Avatar" width="250">
 </p>
 
-Telegram bot that detects the language of messages and warns users when they use unsupported languages.
+Telegram bot that checks message scripts and warns users when they use unsupported languages.
 
 ## Supported Languages
 
@@ -15,7 +15,6 @@ Telegram bot that detects the language of messages and warns users when they use
 
 * Python 3.12+
 * python-telegram-bot
-* lingua-language-detector
 * python-dotenv
 * Docker
 * Docker Compose
@@ -56,6 +55,12 @@ pip install -r requirements.txt
 
 ```bash
 pip freeze > requirements.txt
+```
+
+### Run Tests
+
+```bash
+python3 -m unittest discover -s tests
 ```
 
 ### Configure Environment Variables
