@@ -82,6 +82,8 @@ python bot.py
 docker build -t telegram-language-bot .
 ```
 
+The Docker build runs the unit tests and fails if any test fails.
+
 ### Run Container
 
 ```bash
