@@ -5,12 +5,17 @@ ALLOWED_LETTER_SCRIPTS = (
     "GEORGIAN",
 )
 
+DIACRITICS = frozenset("äÄçÇğĞıİöÖşŞßẞüÜ")
+
 
 def contains_letter(text: str) -> bool:
     return any(unicodedata.category(character).startswith("L") for character in text)
 
 
 def is_allowed_letter(character: str) -> bool:
+    if character in DIACRITICS:
+        return False
+
     character_name = unicodedata.name(character, "")
     return character_name.startswith(ALLOWED_LETTER_SCRIPTS)
 

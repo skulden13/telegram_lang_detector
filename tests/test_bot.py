@@ -43,6 +43,13 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
         await self.assert_replies("Price: 5 лари")
         await self.assert_replies("Price: 10 лари")
 
+    async def test_notifies_for_turkish_text_with_unsupported_latin_letters(self):
+        await self.assert_replies("Hayırlı akşamlar")
+        await self.assert_replies("çok güzel")
+
+    async def test_notifies_for_german_text_with_unsupported_latin_letters(self):
+        await self.assert_replies("schöne Grüße")
+
 
 if __name__ == "__main__":
     unittest.main()

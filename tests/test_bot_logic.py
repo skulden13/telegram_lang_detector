@@ -22,6 +22,16 @@ class AllowedLetterTests(unittest.TestCase):
         self.assertTrue(is_allowed_letter("a"))
         self.assertTrue(is_allowed_letter("ñ"))
 
+    def test_returns_false_for_unsupported_latin_letters(self):
+        self.assertFalse(is_allowed_letter("ä"))
+        self.assertFalse(is_allowed_letter("ç"))
+        self.assertFalse(is_allowed_letter("ğ"))
+        self.assertFalse(is_allowed_letter("ı"))
+        self.assertFalse(is_allowed_letter("ö"))
+        self.assertFalse(is_allowed_letter("ş"))
+        self.assertFalse(is_allowed_letter("ß"))
+        self.assertFalse(is_allowed_letter("ü"))
+
     def test_returns_true_for_georgian_letters(self):
         self.assertTrue(is_allowed_letter("ა"))
 
@@ -42,6 +52,11 @@ class ContainsUnsupportedLetterTests(unittest.TestCase):
         self.assertTrue(contains_unsupported_letter("Привет!"))
         self.assertTrue(contains_unsupported_letter("За 5 лари"))
         self.assertTrue(contains_unsupported_letter("Price: 5 лари"))
+
+    def test_returns_true_for_unsupported_latin_letters(self):
+        self.assertTrue(contains_unsupported_letter("Hayırlı akşamlar"))
+        self.assertTrue(contains_unsupported_letter("çok güzel"))
+        self.assertTrue(contains_unsupported_letter("schöne Grüße"))
 
 
 class ShouldCheckLanguageTests(unittest.TestCase):
@@ -68,6 +83,13 @@ class ShouldCheckLanguageTests(unittest.TestCase):
         self.assertTrue(contains_unsupported_letter("За 5 лари"))
         self.assertTrue(should_check_language("Price: 5 лари"))
         self.assertTrue(should_check_language("Price: 10 лари"))
+
+    def test_returns_true_for_turkish_text_with_unsupported_latin_letters(self):
+        self.assertTrue(should_check_language("Hayırlı akşamlar"))
+        self.assertTrue(should_check_language("çok güzel"))
+
+    def test_returns_true_for_german_text_with_unsupported_latin_letters(self):
+        self.assertTrue(should_check_language("schöne Grüße"))
 
 
 if __name__ == "__main__":
