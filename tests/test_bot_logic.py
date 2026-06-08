@@ -18,19 +18,29 @@ class ContainsLetterTests(unittest.TestCase):
 
 
 class AllowedLetterTests(unittest.TestCase):
-    def test_returns_true_for_latin_letters(self):
+    def test_returns_true_for_ascii_latin_letters(self):
         self.assertTrue(is_allowed_letter("a"))
-        self.assertTrue(is_allowed_letter("ñ"))
+        self.assertTrue(is_allowed_letter("Z"))
 
-    def test_returns_false_for_unsupported_latin_letters(self):
-        self.assertFalse(is_allowed_letter("ä"))
-        self.assertFalse(is_allowed_letter("ç"))
-        self.assertFalse(is_allowed_letter("ğ"))
-        self.assertFalse(is_allowed_letter("ı"))
-        self.assertFalse(is_allowed_letter("ö"))
-        self.assertFalse(is_allowed_letter("ş"))
-        self.assertFalse(is_allowed_letter("ß"))
-        self.assertFalse(is_allowed_letter("ü"))
+    def test_returns_false_for_extended_latin_letters(self):
+        extended_latin_letters_by_language = {
+            "Turkish": "çğıİöşü",
+            "German": "äöüß",
+            "Polish": "ąćęłńóśźż",
+            "Czech": "čďěňřšťž",
+            "French": "àâçéèêëîïôùûüÿœ",
+            "Spanish": "áéíñóúü",
+            "Portuguese": "áâãàçéêíóôõú",
+            "Romanian": "ăâîșț",
+            "Nordic": "åäæøö",
+            "Icelandic": "áðéíóúýþæö",
+            "Vietnamese": "ăâđêôơưáàảãạấầẩẫậắằẳẵặếềểễệớờởỡợứừửữự",
+        }
+
+        for language, letters in extended_latin_letters_by_language.items():
+            with self.subTest(language=language):
+                for letter in letters:
+                    self.assertFalse(is_allowed_letter(letter))
 
     def test_returns_true_for_georgian_letters(self):
         self.assertTrue(is_allowed_letter("ა"))
@@ -43,7 +53,6 @@ class AllowedLetterTests(unittest.TestCase):
 class ContainsUnsupportedLetterTests(unittest.TestCase):
     def test_returns_false_for_latin_and_georgian_text(self):
         self.assertFalse(contains_unsupported_letter("Hello!"))
-        self.assertFalse(contains_unsupported_letter("Hola, niños!"))
         self.assertFalse(contains_unsupported_letter("გამარჯობა"))
         self.assertFalse(contains_unsupported_letter('💰: 5 lari'))
         self.assertFalse(contains_unsupported_letter('💰: 5 lari"'))
@@ -57,6 +66,16 @@ class ContainsUnsupportedLetterTests(unittest.TestCase):
         self.assertTrue(contains_unsupported_letter("Hayırlı akşamlar"))
         self.assertTrue(contains_unsupported_letter("çok güzel"))
         self.assertTrue(contains_unsupported_letter("schöne Grüße"))
+        self.assertTrue(contains_unsupported_letter("Cześć"))
+        self.assertTrue(contains_unsupported_letter("Dobrý večer"))
+        self.assertTrue(contains_unsupported_letter("Ça va très bien"))
+        self.assertTrue(contains_unsupported_letter("Hola, niños!"))
+        self.assertTrue(contains_unsupported_letter("Olá, tudo bem?"))
+        self.assertTrue(contains_unsupported_letter("Bună seara"))
+        self.assertTrue(contains_unsupported_letter("God kväll"))
+        self.assertTrue(contains_unsupported_letter("Góðan daginn"))
+        self.assertTrue(contains_unsupported_letter("Xin chào"))
+        self.assertTrue(contains_unsupported_letter("Xin chào"))
 
 
 class ShouldCheckLanguageTests(unittest.TestCase):
@@ -71,7 +90,7 @@ class ShouldCheckLanguageTests(unittest.TestCase):
         self.assertFalse(should_check_language("123!!!"))
         self.assertFalse(should_check_language("$$$"))
 
-    def test_returns_false_for_latin_or_georgian_text(self):
+    def test_returns_false_for_ascii_latin_or_georgian_text(self):
         self.assertFalse(should_check_language("hey"))
         self.assertFalse(should_check_language("hello 123"))
         self.assertFalse(should_check_language("გამარჯობა"))
@@ -90,6 +109,18 @@ class ShouldCheckLanguageTests(unittest.TestCase):
 
     def test_returns_true_for_german_text_with_unsupported_latin_letters(self):
         self.assertTrue(should_check_language("schöne Grüße"))
+
+    def test_returns_true_for_extended_latin_text(self):
+        self.assertTrue(should_check_language("Cześć"))
+        self.assertTrue(should_check_language("Dobrý večer"))
+        self.assertTrue(should_check_language("Ça va très bien"))
+        self.assertTrue(should_check_language("Hola, niños!"))
+        self.assertTrue(should_check_language("Olá, tudo bem?"))
+        self.assertTrue(should_check_language("Bună seara"))
+        self.assertTrue(should_check_language("God kväll"))
+        self.assertTrue(should_check_language("Góðan daginn"))
+        self.assertTrue(should_check_language("Xin chào"))
+        self.assertTrue(should_check_language("Xin chào"))
 
 
 if __name__ == "__main__":

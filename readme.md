@@ -11,6 +11,42 @@ Telegram bot that checks message scripts and warns users when they use unsupport
 * English 🏴󠁧󠁢󠁥󠁮󠁧󠁿
 * Georgian 🇬🇪
 
+## Detection Rules
+
+The bot allows:
+
+* ASCII English letters: `A-Z`, `a-z`
+* Georgian letters
+* Numbers, punctuation, emoji, and other non-letter characters
+
+The bot warns when a message contains any other Unicode letter. This includes:
+
+* Non-Latin scripts, such as Cyrillic, Armenian, Hebrew, or Arabic
+* Extended Latin letters with accents or language-specific marks, such as `ñ`, `ç`, `ł`, `ß`, `ø`, or `đ`
+
+Examples that trigger a warning:
+
+```text
+Hayırlı akşamlar
+schöne Grüße
+Cześć
+Hola, niños!
+Xin chào
+Привет
+שלום
+```
+
+Examples that do not trigger a warning:
+
+```text
+Hello
+Price: 5 lari
+გამარჯობა
+😬😬😬
+```
+
+This is still a script and character check, not full language detection. Unsupported languages written only with plain ASCII letters, such as `Guten Abend`, `Dzien dobry`, or `Merhaba`, can look the same as English-style text to this bot.
+
 ## Technologies
 
 * Python 3.12+

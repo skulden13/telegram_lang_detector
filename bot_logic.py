@@ -1,29 +1,26 @@
 import unicodedata
 
-ALLOWED_LETTER_SCRIPTS = (
-    "LATIN",
-    "GEORGIAN",
-)
-
-DIACRITICS = frozenset("äÄçÇğĞıİöÖşŞßẞüÜ")
+ALLOWED_LETTER_SCRIPTS = ("GEORGIAN",)
 
 
 def contains_letter(text: str) -> bool:
-    return any(unicodedata.category(character).startswith("L") for character in text)
+    normalized_text = unicodedata.normalize("NFC", text)
+    return any(unicodedata.category(character).startswith("L") for character in normalized_text)
 
 
 def is_allowed_letter(character: str) -> bool:
-    if character in DIACRITICS:
-        return False
+    if "A" <= character <= "Z" or "a" <= character <= "z":
+        return True
 
     character_name = unicodedata.name(character, "")
     return character_name.startswith(ALLOWED_LETTER_SCRIPTS)
 
 
 def contains_unsupported_letter(text: str) -> bool:
+    normalized_text = unicodedata.normalize("NFC", text)
     return any(
         unicodedata.category(character).startswith("L") and not is_allowed_letter(character)
-        for character in text
+        for character in normalized_text
     )
 
 

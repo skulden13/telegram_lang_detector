@@ -31,7 +31,6 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
     async def test_does_not_notify_for_supported_scripts(self):
         await self.assert_does_not_reply("გამარჯობა")
         await self.assert_does_not_reply("Hello!")
-        await self.assert_does_not_reply("Hola, niños!")
         await self.assert_does_not_reply("💰: 5 lari")
         await self.assert_does_not_reply('💰: 5 lari"')
         await self.assert_does_not_reply("Price: 5 lari")
@@ -49,6 +48,17 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_notifies_for_german_text_with_unsupported_latin_letters(self):
         await self.assert_replies("schöne Grüße")
+
+    async def test_notifies_for_extended_latin_text(self):
+        await self.assert_replies("Cześć")
+        await self.assert_replies("Dobrý večer")
+        await self.assert_replies("Ça va très bien")
+        await self.assert_replies("Hola, niños!")
+        await self.assert_replies("Olá, tudo bem?")
+        await self.assert_replies("Bună seara")
+        await self.assert_replies("God kväll")
+        await self.assert_replies("Góðan daginn")
+        await self.assert_replies("Xin chào")
 
 
 if __name__ == "__main__":
