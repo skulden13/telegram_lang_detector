@@ -12,12 +12,15 @@ def check_language(text: str | None) -> bool:
 
 
 async def handle_message(update, context):
-    text = update.message.text
+    message = update.message
+    text = message.text
+    quote = getattr(message, "quote", None)
+    quoted_text = getattr(quote, "text", None)
 
-    if not check_language(text):
+    if not (check_language(text) or check_language(quoted_text)):
         return
 
-    await update.message.reply_text(REPLY_MESSAGE)
+    await message.reply_text(REPLY_MESSAGE)
 
 
 def main():

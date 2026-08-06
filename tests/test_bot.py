@@ -6,16 +6,18 @@ from bot import REPLY_MESSAGE, handle_message
 
 
 class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
-    async def assert_does_not_reply(self, text):
-        message = SimpleNamespace(text=text, reply_text=AsyncMock())
+    async def assert_does_not_reply(self, text, quoted_text=None):
+        quote = SimpleNamespace(text=quoted_text) if quoted_text is not None else None
+        message = SimpleNamespace(text=text, quote=quote, reply_text=AsyncMock())
         update = SimpleNamespace(message=message)
 
         await handle_message(update, None)
 
         message.reply_text.assert_not_called()
 
-    async def assert_replies(self, text):
-        message = SimpleNamespace(text=text, reply_text=AsyncMock())
+    async def assert_replies(self, text, quoted_text=None):
+        quote = SimpleNamespace(text=quoted_text) if quoted_text is not None else None
+        message = SimpleNamespace(text=text, quote=quote, reply_text=AsyncMock())
         update = SimpleNamespace(message=message)
 
         await handle_message(update, None)
@@ -41,6 +43,12 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
         await self.assert_replies("💰: 5 лари")
         await self.assert_replies("Price: 5 лари")
         await self.assert_replies("Price: 10 лари")
+
+    async def test_notifies_when_quoted_text_contains_unsupported_script(self):
+        await self.assert_replies("test", quoted_text="бегала один раз маленькую пробежку")
+
+    async def test_does_not_notify_when_quote_uses_supported_scripts(self):
+        await self.assert_does_not_reply("test", quoted_text="Hello გამარჯობა")
 
     async def test_notifies_for_turkish_text_with_unsupported_latin_letters(self):
         await self.assert_replies("Hayırlı akşamlar")
