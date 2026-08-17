@@ -13,7 +13,7 @@ def check_language(text: str | None) -> bool:
 
 async def handle_message(update, context):
     message = update.message
-    text = message.text
+    text = message.text or message.caption
     quote = getattr(message, "quote", None)
     quoted_text = getattr(quote, "text", None)
 
@@ -33,7 +33,8 @@ def main():
 
     app = Application.builder().token(token).build()
 
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    text_or_caption = (filters.TEXT & ~filters.COMMAND) | filters.CAPTION
+    app.add_handler(MessageHandler(text_or_caption, handle_message))
 
     app.run_polling()
 
