@@ -4,11 +4,11 @@
   <img src="./cat_avatar.jpg" alt="Bot Avatar" width="250">
 </p>
 
-Telegram bot that checks message scripts and warns users when they use unsupported languages.
+Telegram bot for checking chat message and warns users when they use unsupported languages.
 
 ## Supported Languages
 
-* English 🏴󠁧󠁢󠁥󠁮󠁧󠁿
+* English 🇬🇧
 * Georgian 🇬🇪
 
 ## Detection Rules
