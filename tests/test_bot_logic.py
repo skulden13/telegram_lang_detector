@@ -45,6 +45,9 @@ class AllowedLetterTests(unittest.TestCase):
     def test_returns_true_for_georgian_letters(self):
         self.assertTrue(is_allowed_letter("ა"))
 
+    def test_returns_true_for_information_emoji(self):
+        self.assertTrue(is_allowed_letter("ℹ"))
+
     def test_returns_false_for_unsupported_letters(self):
         self.assertFalse(is_allowed_letter("п"))
         self.assertFalse(is_allowed_letter("ա"))
@@ -56,6 +59,7 @@ class ContainsUnsupportedLetterTests(unittest.TestCase):
         self.assertFalse(contains_unsupported_letter("გამარჯობა"))
         self.assertFalse(contains_unsupported_letter('💰: 5 lari'))
         self.assertFalse(contains_unsupported_letter('💰: 5 lari"'))
+        self.assertFalse(contains_unsupported_letter("ℹ️ Information ინფორმაცია"))
 
     def test_returns_true_for_unsupported_letter_scripts(self):
         self.assertTrue(contains_unsupported_letter("Привет!"))

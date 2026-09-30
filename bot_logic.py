@@ -1,6 +1,7 @@
 import unicodedata
 
 ALLOWED_LETTER_SCRIPTS = ("GEORGIAN",)
+ALLOWED_LETTER_NAMES = ("INFORMATION SOURCE",)
 
 
 def contains_letter(text: str) -> bool:
@@ -13,7 +14,10 @@ def is_allowed_letter(character: str) -> bool:
         return True
 
     character_name = unicodedata.name(character, "")
-    return character_name.startswith(ALLOWED_LETTER_SCRIPTS)
+    return (
+        character_name in ALLOWED_LETTER_NAMES
+        or character_name.startswith(ALLOWED_LETTER_SCRIPTS)
+    )
 
 
 def contains_unsupported_letter(text: str) -> bool:

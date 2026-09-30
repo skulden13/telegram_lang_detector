@@ -36,6 +36,7 @@ class HandleMessageTests(unittest.IsolatedAsyncioTestCase):
         await self.assert_does_not_reply("💰: 5 lari")
         await self.assert_does_not_reply('💰: 5 lari"')
         await self.assert_does_not_reply("Price: 5 lari")
+        await self.assert_does_not_reply("ℹ️ For those who haven’t registered yet: დრო ცოტა დარჩა!")
 
     async def test_notifies_for_unsupported_scripts(self):
         await self.assert_replies("Привет!")
