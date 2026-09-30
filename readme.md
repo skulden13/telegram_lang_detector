@@ -261,6 +261,42 @@ BOT_TOKEN=your_telegram_bot_token
 docker compose up -d --build
 ```
 
+### Deploy From Your Local Machine
+
+Copy the deployment environment template:
+
+```bash
+cp .env.deploy.example .env.deploy
+```
+
+Set the SSH connection and the absolute path to the cloned project on the server:
+
+```env
+DEPLOY_SSH_USER=your_server_user
+DEPLOY_SSH_HOST=your_server_ip_or_hostname
+DEPLOY_SSH_KEY=~/.ssh/your_private_key
+DEPLOY_REMOTE_DIR=/home/your_server_user/lang_detector
+```
+
+The `.env.deploy` file is ignored by Git. Deploy with:
+
+```bash
+./deploy.sh
+```
+
+The script connects over SSH and runs these commands in `DEPLOY_REMOTE_DIR`:
+
+```bash
+git pull --rebase
+docker compose up -d --build
+```
+
+To use a configuration file in another location:
+
+```bash
+DEPLOY_ENV_FILE=/path/to/deploy.env ./deploy.sh
+```
+
 ### Check Status
 
 ```bash
