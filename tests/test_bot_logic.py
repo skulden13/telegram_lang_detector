@@ -101,6 +101,21 @@ class ShouldCheckLanguageTests(unittest.TestCase):
         self.assertFalse(should_check_language("💰: 5 lari"))
         self.assertFalse(should_check_language('💰: 5 lari"'))
 
+    def test_returns_false_for_letter_like_emojis(self):
+        emoji_groups = {
+            "information": ["ℹ️"],
+            "letter buttons": ["Ⓜ️", "🅰️", "🅱️", "🅾️", "🅿️"],
+            "marks": ["©️", "®️", "™️"],
+            "keycaps": ["#️⃣", "*️⃣", *[f"{digit}️⃣" for digit in range(10)]],
+            "word buttons": ["🆗", "🆕", "🆘"],
+            "Japanese buttons": ["🈁", "🈚", "🈯"],
+        }
+
+        for group, emojis in emoji_groups.items():
+            for emoji in emojis:
+                with self.subTest(group=group, emoji=emoji):
+                    self.assertFalse(should_check_language(f"Hello გამარჯობა {emoji}"))
+
     def test_returns_true_for_unsupported_letter_scripts(self):
         self.assertTrue(should_check_language("Привет!"))
         self.assertTrue(contains_unsupported_letter("За 5 лари"))
